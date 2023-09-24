@@ -3,7 +3,7 @@
 <head>
   <title>Number Memory Game</title>
   <style>
-    .digit-box, .input-box {
+    .input-box {
       width: 50px;
       height: 50px;
       font-size: 36px;
@@ -31,41 +31,44 @@
     let level = 1;
     let score = 0;
     let originalNumber = "";
-    
-    function startGame() {
-      originalNumber = generateNumber(level);
-      displayNumber(originalNumber);
-      setTimeout(() => {
+    let startTime = null;
+
+    async function startGame() {
+      originalNumber = generateUniqueNumber(level);
+      for (let digit of originalNumber) {
+        displayDigit(digit);
+        await sleep(2000);
         clearDisplay();
-        displayInputBoxes(level);
-      }, 2000);
+      }
+      displayInputBoxes(level);
+      startTime = new Date().getTime();
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
     }
     
-    function generateNumber(length) {
+    function generateUniqueNumber(length) {
+      const digits = [...Array(10).keys()];
       let number = "";
-      for(let i = 0; i < length; i++) {
-        number += Math.floor(Math.random() * 10);
+      for (let i = 0; i < length; i++) {
+        const randIndex = Math.floor(Math.random() * digits.length);
+        number += digits.splice(randIndex, 1);
       }
       return number;
     }
-    
-    function displayNumber(number) {
-      const display = document.getElementById("numberDisplay");
-      number.split('').forEach(digit => {
-        const box = document.createElement("div");
-        box.className = "digit-box";
-        box.innerText = digit;
-        display.appendChild(box);
-      });
+
+    function displayDigit(digit) {
+      document.getElementById("numberDisplay").innerText = digit;
     }
     
     function clearDisplay() {
-      document.getElementById("numberDisplay").innerHTML = "";
+      document.getElementById("numberDisplay").innerText = "";
     }
     
     function displayInputBoxes(length) {
       const container = document.getElementById("userInputContainer");
-      for(let i = 0; i < length; i++) {
+      for (let i = 0; i < length; i++) {
         const input = document.createElement("input");
         input.type = "text";
         input.className = "input-box";
@@ -77,12 +80,23 @@
     }
     
     function checkAnswer() {
+      let elapsedTime = new Date().getTime() - startTime;
       let userNumber = "";
       document.querySelectorAll(".input-box").forEach(input => {
         userNumber += input.value;
       });
-      if(userNumber === originalNumber.split('').reverse().join('')) {
-        score += level * 10;
+      
+      // Partial credit based on correctness and timing
+      let partialScore = 0;
+      for (let i = 0; i < originalNumber.length; i++) {
+        if (userNumber[i] === originalNumber[i]) {
+          partialScore += 5;  // Correct position
+        } else if (originalNumber.includes(userNumber[i])) {
+          partialScore += 2;  // Correct number but wrong position
+        }
+      }
+      score += partialScore - Math.floor(elapsedTime / 1000);
+      if (userNumber === originalNumber) {
         level++;
       }
       document.getElementById("level").innerText = level;
