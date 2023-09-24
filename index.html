@@ -97,6 +97,13 @@ function checkAnswer() {
     userNumber += input.value;
   });
 
+  // Update level
+  if (userNumber === originalNumber) {
+    level++;  // Increase the level indefinitely if the sequence is correct
+  } else if (level > 2) {  // Decrease the level if the sequence is incorrect and level is greater than 2
+    level--;
+  }
+
   // Partial credit based on correctness and timing
   let partialScore = 0;
   for (let i = 0; i < originalNumber.length; i++) {
@@ -107,13 +114,6 @@ function checkAnswer() {
     }
   }
   score += (partialScore * level) / totalTries - Math.floor(elapsedTime / 1000);
-
-  // Update level
-  if (userNumber === originalNumber) {
-    level++;  // Increase the level indefinitely if the sequence is correct
-  } else if (level > 2) {  // Decrease the level if the sequence is incorrect and level is greater than 2
-    level--;
-  }
 
   // Update best score
   if (score > bestScore) {
