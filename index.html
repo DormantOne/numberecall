@@ -88,7 +88,7 @@
       document.getElementById("userInputContainer").style.display = "block";
     }
     
- function checkAnswer() {
+function checkAnswer() {
   let elapsedTime = new Date().getTime() - startTime;
   let userNumber = "";
 
@@ -108,22 +108,24 @@
   }
   score += (partialScore * level) / totalTries - Math.floor(elapsedTime / 1000);
 
-// Update level
-if (userNumber === originalNumber) {
-  level++;  // Increase the level indefinitely if the sequence is correct
-} else if (level > 2) {  // Decrease the level if the sequence is incorrect and level is greater than 2
-  level--;
-}
-
+  // Update level
+  if (userNumber === originalNumber) {
+    level++;  // Increase the level indefinitely if the sequence is correct
+  } else if (level > 2) {  // Decrease the level if the sequence is incorrect and level is greater than 2
+    level--;
+  }
 
   // Update best score
   if (score > bestScore) {
     bestScore = score;
   }
 
+  // Update UI
   document.getElementById("level").innerText = level;
   document.getElementById("score").innerText = Math.floor(score);
   document.getElementById("bestScore").innerText = Math.floor(bestScore);
+
+  // Reset input boxes and buttons
   document.getElementById("userInputContainer").innerHTML = "";
   document.getElementById("submitButton").style.display = "none";
   document.getElementById("startButton").style.display = "block";
