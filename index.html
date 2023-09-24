@@ -41,12 +41,27 @@ let originalNumber = "";
 let startTime = null;
 let totalTries = 0;
 let cycleCounter = 0;
+let cycleData = [];
 
 async function startGame() {
- if (cycleCounter === 0) {
+  if (cycleCounter >= 4) {
+    let confirmed = confirm("Do you want to continue as " + localStorage.getItem("nickname") + "?");
+    if (confirmed) {
+      cycleCounter = 0;
+      score = 0;
+      cycleData = [];
+    } else {
+      let newNickname = prompt("Enter a new nickname:");
+      localStorage.setItem("nickname", newNickname);
+      cycleCounter = 0;
+      score = 0;
+      cycleData = [];
+    }
+  } else if (cycleCounter === 0) {
     let nickname = prompt("Enter your nickname:");
     localStorage.setItem("nickname", nickname);
   }
+  
   document.getElementById("startButton").style.display = "none";
   totalTries++;
   originalNumber = generateUniqueNumber(level);
@@ -81,66 +96,52 @@ function clearDisplay() {
   document.getElementById("numberDisplay").innerText = "";
 }
 
-// Modified displayInputBoxes function
 function displayInputBoxes(length) {
   const container = document.getElementById("userInputContainer");
-  let previousInput = null;
-
   for (let i = 0; i < length; i++) {
     const input = document.createElement("input");
     input.type = "text";
     input.className = "input-box";
     input.maxLength = 1;
-    input.disabled = true; // Disable the input by default
-
-    // Enable the next input box when a digit is entered
+    input.disabled = true;
     input.addEventListener('input', function() {
       if (this.nextSibling) {
         this.nextSibling.disabled = false;
         this.nextSibling.focus();
       }
     });
-
     container.appendChild(input);
-
-    if (previousInput === null) {
-      input.disabled = false; // Enable the first input box
+    if (i === 0) {
+      input.disabled = false;
     }
-
-    previousInput = input;
   }
-
   document.getElementById("submitButton").style.display = "block";
   document.getElementById("userInputContainer").style.display = "block";
 }
-    
+
 function checkAnswer() {
-  cycleCounter++;  // Increment the cycle counter
+  cycleCounter++;
+  
   let elapsedTime = new Date().getTime() - startTime;
   let userNumber = "";
-
-  // Collect the user input
   document.querySelectorAll(".input-box").forEach(input => {
     userNumber += input.value;
   });
 
-  // Reverse the userNumber
-  userNumber = userNumber.split('').reverse().join('');
+  let cycleInfo = {
+    userAnswer: userNumber,
+    correctAnswer: originalNumber,
+    originalOrder: originalNumber.split('').map(Number).sort((a, b) => a - b).join('')
+  };
+  
+  cycleData.push(cycleInfo);
 
-  // Print userNumber and originalNumber to console for debugging
-  console.log("User Number: ", userNumber);
-  console.log("Original Number: ", originalNumber);
-
-  // Update level
   if (userNumber === originalNumber) {
-    console.log("Correct! Leveling up.");
-    level++;  // Increase the level indefinitely if the sequence is correct
-  } else if (level > 2) {  // Decrease the level if the sequence is incorrect and level is greater than 2
-    console.log("Incorrect! Leveling down.");
+    level++;
+  } else if (level > 2) {
     level--;
   }
 
-  // Partial credit based on correctness and timing
   let partialScore = 0;
   for (let i = 0; i < originalNumber.length; i++) {
     if (userNumber[i] === originalNumber[i]) {
@@ -151,22 +152,18 @@ function checkAnswer() {
   }
   score += (partialScore * level) / totalTries - Math.floor(elapsedTime / 1000);
 
-  // Update best score
   if (score > bestScore) {
     bestScore = score;
   }
 
-  // Update UI
   document.getElementById("level").innerText = level;
   document.getElementById("score").innerText = Math.floor(score);
   document.getElementById("bestScore").innerText = Math.floor(bestScore);
 
-  // Reset input boxes and buttons
   document.getElementById("userInputContainer").innerHTML = "";
   document.getElementById("submitButton").style.display = "none";
   document.getElementById("startButton").style.display = "block";
   
-  // Restart the game
   if (cycleCounter >= 4) {
     endGame();
   } else {
@@ -186,9 +183,16 @@ function endGame() {
   
   localStorage.setItem("userData", JSON.stringify(userData));
   
-  alert(`Game over, ${nickname}! Your final score is ${Math.floor(score)}.`);
+  let summary = "Game Summary:\n";
+  cycleData.forEach((cycle, index) => {
+    summary += `Cycle ${index + 1}:\n`;
+    summary += `Your Answer: ${cycle.userAnswer}\n`;
+    summary += `Correct Answer: ${cycle.correctAnswer}\n`;
+    summary += `Original Order: ${cycle.originalOrder}\n`;
+  });
+  
+  alert(summary);
 }
-
 
   </script>
   
