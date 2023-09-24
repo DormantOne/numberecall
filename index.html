@@ -44,7 +44,7 @@
       originalNumber = generateUniqueNumber(level);
       for (let digit of originalNumber) {
         displayDigit(digit);
-        await sleep(2000);
+        await sleep(1000); // Reduced time to 1 second
         clearDisplay();
       }
       displayInputBoxes(level);
@@ -106,7 +106,7 @@
 
       // Update level
       if (userNumber === originalNumber) {
-        level++;
+        level++;  // Increase the level
       } else if (level > 1) {
         level--;
       }
