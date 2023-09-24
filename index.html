@@ -40,8 +40,13 @@ let bestScore = 0;
 let originalNumber = "";
 let startTime = null;
 let totalTries = 0;
+let cycleCounter = 0;
 
 async function startGame() {
+ if (cycleCounter === 0) {
+    let nickname = prompt("Enter your nickname:");
+    localStorage.setItem("nickname", nickname);
+  }
   document.getElementById("startButton").style.display = "none";
   totalTries++;
   originalNumber = generateUniqueNumber(level);
@@ -110,6 +115,7 @@ function displayInputBoxes(length) {
 }
     
 function checkAnswer() {
+  cycleCounter++;  // Increment the cycle counter
   let elapsedTime = new Date().getTime() - startTime;
   let userNumber = "";
 
@@ -161,7 +167,26 @@ function checkAnswer() {
   document.getElementById("startButton").style.display = "block";
   
   // Restart the game
-  startGame();
+  if (cycleCounter >= 4) {
+    endGame();
+  } else {
+    startGame();
+  }
+}
+
+function endGame() {
+  let nickname = localStorage.getItem("nickname");
+  let timestamp = new Date().toISOString();
+  
+  let userData = {
+    nickname: nickname,
+    score: Math.floor(score),
+    timestamp: timestamp
+  };
+  
+  localStorage.setItem("userData", JSON.stringify(userData));
+  
+  alert(`Game over, ${nickname}! Your final score is ${Math.floor(score)}.`);
 }
 
 
