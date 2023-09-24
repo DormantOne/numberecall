@@ -40,18 +40,22 @@
     let startTime = null;
     let totalTries = 0;
 
-    async function startGame() {
-      document.getElementById("startButton").style.display = "none";
-      totalTries++;
-      originalNumber = generateUniqueNumber(level);
-      for (let digit of originalNumber) {
-        displayDigit(digit);
-        await sleep(1000);
-        clearDisplay();
-      }
-      displayInputBoxes(level);
-      startTime = new Date().getTime();
-    }
+async function startGame() {
+  // Add this line to debug
+  console.log("Starting game with level: ", level);
+
+  document.getElementById("startButton").style.display = "none";
+  totalTries++;
+  originalNumber = generateUniqueNumber(level);
+  for (let digit of originalNumber) {
+    displayDigit(digit);
+    await sleep(1000);
+    clearDisplay();
+  }
+  displayInputBoxes(level);  // Make sure the number of input boxes matches 'level'
+  startTime = new Date().getTime();
+}
+
 
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
