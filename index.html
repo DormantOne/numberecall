@@ -1,4 +1,94 @@
-function checkAnswer() {
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Number Memory Game</title>
+  <style>
+    #numberDisplay {
+      font-size: 72px;
+    }
+    .input-box {
+      width: 50px;
+      height: 50px;
+      font-size: 36px;
+      text-align: center;
+      margin: 5px;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Number Memory Game</h1>
+  
+  <div id="numberDisplay"></div>
+  <div id="userInputContainer" style="display:none;">
+    <!-- Input boxes will be added here -->
+  </div>
+  
+  <button onclick="startGame()" id="startButton">Start</button>
+  <button onclick="checkAnswer()" style="display:none;" id="submitButton">Submit</button>
+  
+  <p>Level: <span id="level">5</span></p>
+  <p>Score: <span id="score">0</span></p>
+  <p>Best Score: <span id="bestScore">0</span></p>
+  
+  <script>
+    let level = 5;
+    let score = 0;
+    let bestScore = 0;
+    let originalNumber = "";
+    let startTime = null;
+    let totalTries = 0;
+
+    async function startGame() {
+      document.getElementById("startButton").style.display = "none";
+      totalTries++;
+      originalNumber = generateUniqueNumber(level);
+      for (let digit of originalNumber) {
+        displayDigit(digit);
+        await sleep(1000);
+        clearDisplay();
+      }
+      displayInputBoxes(level);
+      startTime = new Date().getTime();
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+    
+    function generateUniqueNumber(length) {
+      const digits = [...Array(10).keys()];
+      let number = "";
+      for (let i = 0; i < length; i++) {
+        const randIndex = Math.floor(Math.random() * digits.length);
+        number += digits.splice(randIndex, 1);
+      }
+      return number;
+    }
+
+    function displayDigit(digit) {
+      document.getElementById("numberDisplay").innerText = digit;
+    }
+    
+    function clearDisplay() {
+      document.getElementById("numberDisplay").innerText = "";
+    }
+    
+    function displayInputBoxes(length) {
+      const container = document.getElementById("userInputContainer");
+      for (let i = 0; i < length; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "input-box";
+        input.maxLength = 1;
+        container.appendChild(input);
+      }
+      document.getElementById("submitButton").style.display = "block";
+      document.getElementById("userInputContainer").style.display = "block";
+    }
+    
+ function checkAnswer() {
   let elapsedTime = new Date().getTime() - startTime;
   let userNumber = "";
 
@@ -38,3 +128,8 @@ if (userNumber === originalNumber) {
   document.getElementById("submitButton").style.display = "none";
   document.getElementById("startButton").style.display = "block";
 }
+
+  </script>
+  
+</body>
+</html>
