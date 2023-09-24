@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Number Memory Game</title>
+  <style>
+    #numberDisplay {
+      font-size: 48px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Number Memory Game</h1>
+  
+  <div id="numberDisplay"></div>
+  <div id="userInputContainer" style="display:none;">
+    <input type="text" id="userInput" placeholder="Enter the number">
+    <button onclick="checkAnswer()">Submit</button>
+  </div>
+  
+  <p>Level: <span id="level">1</span></p>
+  <p>Score: <span id="score">0</span></p>
+  
+  <script>
+    let level = 1;
+    let score = 0;
+    let originalNumber = "";
+    
+    function startGame() {
+      originalNumber = generateNumber(level);
+      document.getElementById("numberDisplay").innerText = originalNumber;
+      setTimeout(() => {
+        document.getElementById("numberDisplay").innerText = "";
+        document.getElementById("userInputContainer").style.display = "block";
+      }, 2000);
+    }
+    
+    function generateNumber(length) {
+      let number = "";
+      for(let i = 0; i < length; i++) {
+        number += Math.floor(Math.random() * 10);
+      }
+      return number;
+    }
+    
+    function checkAnswer() {
+      const userNumber = document.getElementById("userInput").value;
+      if(userNumber === originalNumber) {
+        score += level * 10;
+        level++;
+      }
+      document.getElementById("level").innerText = level;
+      document.getElementById("score").innerText = score;
+      document.getElementById("userInput").value = "";
+      document.getElementById("userInputContainer").style.display = "none";
+      startGame();
+    }
+    
+    startGame();
+  </script>
+  
+</body>
+</html>
