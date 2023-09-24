@@ -25,6 +25,7 @@
     <!-- Input boxes will be added here -->
   </div>
   
+  <button onclick="startGame()" id="startButton">Start</button>
   <button onclick="checkAnswer()" style="display:none;" id="submitButton">Submit</button>
   
   <p>Level: <span id="level">5</span></p>
@@ -40,11 +41,12 @@
     let totalTries = 0;
 
     async function startGame() {
+      document.getElementById("startButton").style.display = "none";
       totalTries++;
       originalNumber = generateUniqueNumber(level);
       for (let digit of originalNumber) {
         displayDigit(digit);
-        await sleep(1000); // Reduced time to 1 second
+        await sleep(1000);
         clearDisplay();
       }
       displayInputBoxes(level);
@@ -121,10 +123,8 @@
       document.getElementById("bestScore").innerText = Math.floor(bestScore);
       document.getElementById("userInputContainer").innerHTML = "";
       document.getElementById("submitButton").style.display = "none";
-      startGame();
+      document.getElementById("startButton").style.display = "block";
     }
-    
-    startGame();
   </script>
   
 </body>
