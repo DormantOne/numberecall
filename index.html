@@ -3,8 +3,13 @@
 <head>
   <title>Number Memory Game</title>
   <style>
-    #numberDisplay {
-      font-size: 48px;
+    .digit-box, .input-box {
+      width: 50px;
+      height: 50px;
+      font-size: 36px;
+      text-align: center;
+      margin: 5px;
+      display: inline-block;
     }
   </style>
 </head>
@@ -14,9 +19,10 @@
   
   <div id="numberDisplay"></div>
   <div id="userInputContainer" style="display:none;">
-    <input type="text" id="userInput" placeholder="Enter the number">
-    <button onclick="checkAnswer()">Submit</button>
+    <!-- Input boxes will be added here -->
   </div>
+  
+  <button onclick="checkAnswer()" style="display:none;" id="submitButton">Submit</button>
   
   <p>Level: <span id="level">1</span></p>
   <p>Score: <span id="score">0</span></p>
@@ -28,10 +34,10 @@
     
     function startGame() {
       originalNumber = generateNumber(level);
-      document.getElementById("numberDisplay").innerText = originalNumber;
+      displayNumber(originalNumber);
       setTimeout(() => {
-        document.getElementById("numberDisplay").innerText = "";
-        document.getElementById("userInputContainer").style.display = "block";
+        clearDisplay();
+        displayInputBoxes(level);
       }, 2000);
     }
     
@@ -43,16 +49,46 @@
       return number;
     }
     
+    function displayNumber(number) {
+      const display = document.getElementById("numberDisplay");
+      number.split('').forEach(digit => {
+        const box = document.createElement("div");
+        box.className = "digit-box";
+        box.innerText = digit;
+        display.appendChild(box);
+      });
+    }
+    
+    function clearDisplay() {
+      document.getElementById("numberDisplay").innerHTML = "";
+    }
+    
+    function displayInputBoxes(length) {
+      const container = document.getElementById("userInputContainer");
+      for(let i = 0; i < length; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "input-box";
+        input.maxLength = 1;
+        container.appendChild(input);
+      }
+      document.getElementById("submitButton").style.display = "block";
+      document.getElementById("userInputContainer").style.display = "block";
+    }
+    
     function checkAnswer() {
-      const userNumber = document.getElementById("userInput").value;
-      if(userNumber === originalNumber) {
+      let userNumber = "";
+      document.querySelectorAll(".input-box").forEach(input => {
+        userNumber += input.value;
+      });
+      if(userNumber === originalNumber.split('').reverse().join('')) {
         score += level * 10;
         level++;
       }
       document.getElementById("level").innerText = level;
       document.getElementById("score").innerText = score;
-      document.getElementById("userInput").value = "";
-      document.getElementById("userInputContainer").style.display = "none";
+      document.getElementById("userInputContainer").innerHTML = "";
+      document.getElementById("submitButton").style.display = "none";
       startGame();
     }
     
