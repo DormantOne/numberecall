@@ -103,10 +103,19 @@ function checkAnswer() {
     userNumber += input.value;
   });
 
+  // Reverse the userNumber
+  userNumber = userNumber.split('').reverse().join('');
+
+  // Print userNumber and originalNumber to console for debugging
+  console.log("User Number: ", userNumber);
+  console.log("Original Number: ", originalNumber);
+
   // Update level
   if (userNumber === originalNumber) {
+    console.log("Correct! Leveling up.");
     level++;  // Increase the level indefinitely if the sequence is correct
   } else if (level > 2) {  // Decrease the level if the sequence is incorrect and level is greater than 2
+    console.log("Incorrect! Leveling down.");
     level--;
   }
 
