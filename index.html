@@ -91,6 +91,12 @@
     function checkAnswer() {
       let elapsedTime = new Date().getTime() - startTime;
       let userNumber = "";
+       // Update level
+      if (userNumber === originalNumber) {
+        level++;  // Increase the level if the sequence is correct
+      } else if (level > 9) {  // Changed from 1 to 5
+        level--;  // Decrease the level if the sequence is incorrect and level is greater than 5
+      }
       document.querySelectorAll(".input-box").forEach(input => {
         userNumber += input.value;
       });
