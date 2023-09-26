@@ -1,138 +1,124 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Number Memory Game</title>
-    <style>
-        #numberDisplay {
-            font-size: 72px;
-        }
-
-        .input-box {
-            width: 50px;
-            height: 50px;
-            font-size: 36px;
-            text-align: center;
-            margin: 5px;
-            display: inline-block;
-        }
-    </style>
+  <title>Number Memory Game</title>
+  <style>
+    #numberDisplay {
+      font-size: 72px;
+    }
+    .input-box {
+      width: 50px;
+      height: 50px;
+      font-size: 36px;
+      text-align: center;
+      margin: 5px;
+      display: inline-block;
+    }
+  </style>
 </head>
-
 <body>
 
-    <h1>Number Memory Game</h1>
-    <p>This is a memory game. It is not secure or confidential - use at your own risk.</p>
-    <p>Please put the number in backward. You will be graded based on correct backward order and other parameters.</p>
+  <h1>Number Memory Game</h1>
+  <label>Email:</label>
+  <input type="text" id="emailInput">
+  <br>
+  <label>Substance Influence:</label>
+  <input type="radio" name="substance" value="coffee"> Coffee
+  <input type="radio" name="substance" value="alcohol"> Alcohol
+  <input type="radio" name="substance" value="mj"> MJ
+  <input type="radio" name="substance" value="wellbutrin"> Wellbutrin
+  <input type="radio" name="substance" value="nothing"> Nothing
+  
+  <div id="numberDisplay"></div>
+  <div id="userInputContainer" style="display:none;">
+    <!-- Input boxes will be added here -->
+  </div>
+  
+  <button onclick="startGame()" id="startButton">Start</button>
+  <button onclick="checkAnswer()" style="display:none;" id="submitButton">Submit</button>
+  
+  <p>Level: <span id="level">5</span></p>
+  <p>Score: <span id="score">0</span></p>
+  <p>Best Score: <span id="bestScore">0</span></p>
+  
+  <script>
+    let level = 5;
+    let score = 0;
+    let bestScore = 0;
+    let originalNumber = "";
+    let startTime = null;
+    let totalTries = 0;
+    let cycleCounter = 0;
+    let cycleData = [];
 
-    <div id="numberDisplay"></div>
-    <div id="userInputContainer" style="display:none;">
-        <!-- Input boxes will be added here -->
-    </div>
-
-    <button onclick="startGame()" id="startButton">Start</button>
-    <button onclick="checkAnswer()" style="display:none;" id="submitButton">Submit</button>
-
-    <p>Level: <span id="level">5</span></p>
-    <p>Score: <span id="score">0</span></p>
-    <p>Best Score: <span id="bestScore">0</span></p>
-
-    <script>
-        let level = 5;
-        let score = 0;
-        let bestScore = 0;
-        let originalNumber = "";
-        let startTime = null;
-        let totalTries = 0;
-        let cycleCounter = 0;
-        let cycleData = [];
-
-
-async function startGame() {
-  console.log("startGame is called");
-
-  if (cycleCounter >= 4) {
-    let confirmed = confirm("Do you want to continue as " + localStorage.getItem("email") + "?");
-    if (confirmed) {
-      cycleCounter = 0;
-      score = 0;
-      cycleData = [];
-    } else {
-      let newEmail = prompt("Enter a new email:");
-      localStorage.setItem("email", newEmail);
-      cycleCounter = 0;
-      score = 0;
-      cycleData = [];
-    }
-  } else if (cycleCounter === 0) {
-    let email = prompt("Enter your email:");
-    localStorage.setItem("email", email);
-
-    let medication = prompt("Are you using any concentration-affecting medication? Options: coffee, alcohol, mj, wellbutrin, nothing, other");
-    if (medication === "other") {
-      medication = prompt("Please specify the other concentration-affecting medication:");
-    }
-    localStorage.setItem("medication", medication);
-    document.getElementById("startButton").style.display = "none";
-    totalTries++;
-    originalNumber = generateUniqueNumber(level);
-    for (let digit of originalNumber) {
-      displayDigit(digit);
-      await sleep(1000);
-      clearDisplay();
-    }
-    displayInputBoxes(level);
-    startTime = new Date().getTime();
-  }
-}  // Added closing brace here
-
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function generateUniqueNumber(length) {
-  const digits = [...Array(10).keys()];
-  let number = "";
-  for (let i = 0; i < length; i++) {
-    const randIndex = Math.floor(Math.random() * digits.length);
-    number += digits.splice(randIndex, 1);
-  }
-  return number;
-}
-
-function displayDigit(digit) {
-  document.getElementById("numberDisplay").innerText = digit;
-}
-
-function clearDisplay() {
-  document.getElementById("numberDisplay").innerText = "";
-}
-
-function displayInputBoxes(length) {
-  const container = document.getElementById("userInputContainer");
-  for (let i = 0; i < length; i++) {
-    const input = document.createElement("input");
-    input.type = "text";
-    input.className = "input-box";
-    input.maxLength = 1;
-    input.disabled = true;
-    input.addEventListener('input', function() {
-      if (this.nextSibling) {
-        this.nextSibling.disabled = false;
-        this.nextSibling.focus();
+    async function startGame() {
+      // Reading the email and substance influence
+      let email = document.getElementById('emailInput').value;
+      let substance = document.querySelector('input[name="substance"]:checked').value;
+      
+      // Storing the email and substance influence in localStorage
+      localStorage.setItem("email", email);
+      localStorage.setItem("substance", substance);
+      
+      // The rest of your original code
+      document.getElementById("startButton").style.display = "none";
+      totalTries++;
+      originalNumber = generateUniqueNumber(level);
+      for (let digit of originalNumber) {
+        displayDigit(digit);
+        await sleep(1000);
+        clearDisplay();
       }
-    });
-    container.appendChild(input);
-    if (i === 0) {
-      input.disabled = false;
+      displayInputBoxes(level);
+      startTime = new Date().getTime();
     }
-  }
-  document.getElementById("submitButton").style.display = "block";
-  document.getElementById("userInputContainer").style.display = "block";
-}
 
-function checkAnswer() {
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function generateUniqueNumber(length) {
+      const digits = [...Array(10).keys()];
+      let number = "";
+      for (let i = 0; i < length; i++) {
+        const randIndex = Math.floor(Math.random() * digits.length);
+        number += digits.splice(randIndex, 1);
+      }
+      return number;
+    }
+
+    function displayDigit(digit) {
+      document.getElementById("numberDisplay").innerText = digit;
+    }
+
+    function clearDisplay() {
+      document.getElementById("numberDisplay").innerText = "";
+    }
+
+    function displayInputBoxes(length) {
+      const container = document.getElementById("userInputContainer");
+      for (let i = 0; i < length; i++) {
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "input-box";
+        input.maxLength = 1;
+        input.disabled = true;
+        input.addEventListener('input', function() {
+          if (this.nextSibling) {
+            this.nextSibling.disabled = false;
+            this.nextSibling.focus();
+          }
+        });
+        container.appendChild(input);
+        if (i === 0) {
+          input.disabled = false;
+        }
+      }
+      document.getElementById("submitButton").style.display = "block";
+      document.getElementById("userInputContainer").style.display = "block";
+    }
+
+   function checkAnswer() {
   cycleCounter++;
   
   let elapsedTime = new Date().getTime() - startTime;
