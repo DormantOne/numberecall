@@ -128,28 +128,34 @@ function checkAnswer() {
     userNumber += input.value;
   });
 
+  // Reverse the original number for grading and storing as the correct answer
+  let reversedOriginalNumber = originalNumber.split('').reverse().join('');
+
+  // Store cycle information
   let cycleInfo = {
     userAnswer: userNumber,
-    correctAnswer: originalNumber,
-    originalOrder: originalNumber.split('').map(Number).sort((a, b) => a - b).join('')
+    correctAnswer: reversedOriginalNumber,
+    originalOrder: originalNumber
   };
   
   cycleData.push(cycleInfo);
 
-  if (userNumber === originalNumber) {
+  if (userNumber === reversedOriginalNumber) {
     level++;
   } else if (level > 2) {
     level--;
   }
 
+  // Use reversedOriginalNumber for grading
   let partialScore = 0;
-  for (let i = 0; i < originalNumber.length; i++) {
-    if (userNumber[i] === originalNumber[i]) {
+  for (let i = 0; i < reversedOriginalNumber.length; i++) {
+    if (userNumber[i] === reversedOriginalNumber[i]) {
       partialScore += 5;
-    } else if (originalNumber.includes(userNumber[i])) {
+    } else if (reversedOriginalNumber.includes(userNumber[i])) {
       partialScore += 2;
     }
   }
+
   score += (partialScore * level) / totalTries - Math.floor(elapsedTime / 1000);
 
   if (score > bestScore) {
