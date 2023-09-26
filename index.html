@@ -19,6 +19,8 @@
 <body>
 
   <h1>Number Memory Game</h1>
+  <p>This is a memory game. It is not secure or confidential - use at your own risk.</p>
+  <p>Please put the number in backward. You will be graded based on correct backward order and other parameters.</p>
   
   <div id="numberDisplay"></div>
   <div id="userInputContainer" style="display:none;">
@@ -45,23 +47,27 @@ let cycleData = [];
 
 async function startGame() {
   if (cycleCounter >= 4) {
-    let confirmed = confirm("Do you want to continue as " + localStorage.getItem("nickname") + "?");
-    if (confirmed) {
-      cycleCounter = 0;
-      score = 0;
-      cycleData = [];
-    } else {
-      let newNickname = prompt("Enter a new nickname:");
-      localStorage.setItem("nickname", newNickname);
-      cycleCounter = 0;
-      score = 0;
-      cycleData = [];
-    }
-  } else if (cycleCounter === 0) {
-    let nickname = prompt("Enter your nickname:");
-    localStorage.setItem("nickname", nickname);
+      let confirmed = confirm("Do you want to continue as " + localStorage.getItem("email") + "?");
+      if (confirmed) {
+        cycleCounter = 0;
+        score = 0;
+        cycleData = [];
+      } else {
+        let newEmail = prompt("Enter a new email:");  // Changed this line
+        localStorage.setItem("email", newEmail);  // And this line
+        cycleCounter = 0;
+        score = 0;
+        cycleData = [];
+      }
+    } else if (cycleCounter === 0) {
+   let email = prompt("Enter your email:");
+   localStorage.setItem("email", email);
+        
+   let medication = prompt("Are you using any concentration-affecting medication? Options: coffee, alcohol, mj, wellbutrin, nothing, other");
+   if (medication === "other") {
+     medication = prompt("Please specify the other concentration-affecting medication:");
   }
-  
+  localStorage.setItem("medication", medication);
   document.getElementById("startButton").style.display = "none";
   totalTries++;
   originalNumber = generateUniqueNumber(level);
@@ -178,11 +184,11 @@ function checkAnswer() {
 }
 
 function endGame() {
-  let nickname = localStorage.getItem("nickname");
+  let email = localStorage.getItem("email");
   let timestamp = new Date().toISOString();
   
   let userData = {
-    nickname: nickname,
+    email: email,
     score: Math.floor(score),
     timestamp: timestamp
   };
