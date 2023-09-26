@@ -1,51 +1,55 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>Number Memory Game</title>
-  <style>
-    #numberDisplay {
-      font-size: 72px;
-    }
-    .input-box {
-      width: 50px;
-      height: 50px;
-      font-size: 36px;
-      text-align: center;
-      margin: 5px;
-      display: inline-block;
-    }
-  </style>
+    <title>Number Memory Game</title>
+    <style>
+        #numberDisplay {
+            font-size: 72px;
+        }
+
+        .input-box {
+            width: 50px;
+            height: 50px;
+            font-size: 36px;
+            text-align: center;
+            margin: 5px;
+            display: inline-block;
+        }
+    </style>
 </head>
+
 <body>
 
-  <h1>Number Memory Game</h1>
-  <p>This is a memory game. It is not secure or confidential - use at your own risk.</p>
-  <p>Please put the number in backward. You will be graded based on correct backward order and other parameters.</p>
-  
-  <div id="numberDisplay"></div>
-  <div id="userInputContainer" style="display:none;">
-    <!-- Input boxes will be added here -->
-  </div>
-  
-  <button onclick="startGame()" id="startButton">Start</button>
-  <button onclick="checkAnswer()" style="display:none;" id="submitButton">Submit</button>
-  
-  <p>Level: <span id="level">5</span></p>
-  <p>Score: <span id="score">0</span></p>
-  <p>Best Score: <span id="bestScore">0</span></p>
-  
-  <script>
+    <h1>Number Memory Game</h1>
+    <p>This is a memory game. It is not secure or confidential - use at your own risk.</p>
+    <p>Please put the number in backward. You will be graded based on correct backward order and other parameters.</p>
 
-let level = 5;
-let score = 0;
-let bestScore = 0;
-let originalNumber = "";
-let startTime = null;
-let totalTries = 0;
-let cycleCounter = 0;
-let cycleData = [];
+    <div id="numberDisplay"></div>
+    <div id="userInputContainer" style="display:none;">
+        <!-- Input boxes will be added here -->
+    </div>
+
+    <button onclick="startGame()" id="startButton">Start</button>
+    <button onclick="checkAnswer()" style="display:none;" id="submitButton">Submit</button>
+
+    <p>Level: <span id="level">5</span></p>
+    <p>Score: <span id="score">0</span></p>
+    <p>Best Score: <span id="bestScore">0</span></p>
+
+    <script>
+        let level = 5;
+        let score = 0;
+        let bestScore = 0;
+        let originalNumber = "";
+        let startTime = null;
+        let totalTries = 0;
+        let cycleCounter = 0;
+        let cycleData = [];
+
 
 async function startGame() {
+   console.log("startGame is called");
   if (cycleCounter >= 4) {
       let confirmed = confirm("Do you want to continue as " + localStorage.getItem("email") + "?");
       if (confirmed) {
