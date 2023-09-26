@@ -49,40 +49,43 @@
 
 
 async function startGame() {
-   console.log("startGame is called");
+  console.log("startGame is called");
+
   if (cycleCounter >= 4) {
-      let confirmed = confirm("Do you want to continue as " + localStorage.getItem("email") + "?");
-      if (confirmed) {
-        cycleCounter = 0;
-        score = 0;
-        cycleData = [];
-      } else {
-        let newEmail = prompt("Enter a new email:");  // Changed this line
-        localStorage.setItem("email", newEmail);  // And this line
-        cycleCounter = 0;
-        score = 0;
-        cycleData = [];
-      }
-    } else if (cycleCounter === 0) {
-   let email = prompt("Enter your email:");
-   localStorage.setItem("email", email);
-        
-   let medication = prompt("Are you using any concentration-affecting medication? Options: coffee, alcohol, mj, wellbutrin, nothing, other");
-   if (medication === "other") {
-     medication = prompt("Please specify the other concentration-affecting medication:");
+    let confirmed = confirm("Do you want to continue as " + localStorage.getItem("email") + "?");
+    if (confirmed) {
+      cycleCounter = 0;
+      score = 0;
+      cycleData = [];
+    } else {
+      let newEmail = prompt("Enter a new email:");
+      localStorage.setItem("email", newEmail);
+      cycleCounter = 0;
+      score = 0;
+      cycleData = [];
+    }
+  } else if (cycleCounter === 0) {
+    let email = prompt("Enter your email:");
+    localStorage.setItem("email", email);
+
+    let medication = prompt("Are you using any concentration-affecting medication? Options: coffee, alcohol, mj, wellbutrin, nothing, other");
+    if (medication === "other") {
+      medication = prompt("Please specify the other concentration-affecting medication:");
+    }
+    localStorage.setItem("medication", medication);
+    document.getElementById("startButton").style.display = "none";
+    totalTries++;
+    originalNumber = generateUniqueNumber(level);
+    for (let digit of originalNumber) {
+      displayDigit(digit);
+      await sleep(1000);
+      clearDisplay();
+    }
+    displayInputBoxes(level);
+    startTime = new Date().getTime();
   }
-  localStorage.setItem("medication", medication);
-  document.getElementById("startButton").style.display = "none";
-  totalTries++;
-  originalNumber = generateUniqueNumber(level);
-  for (let digit of originalNumber) {
-    displayDigit(digit);
-    await sleep(1000);
-    clearDisplay();
-  }
-  displayInputBoxes(level);
-  startTime = new Date().getTime();
-}
+}  // Added closing brace here
+
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
