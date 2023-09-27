@@ -2,6 +2,9 @@
 <html>
 <head>
   <title>Number Memory Game</title>
+   <!-- 1. Include Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
   <style>
     #numberDisplay {
       font-size: 72px;
@@ -52,6 +55,40 @@
     let totalTries = 0;
     let cycleCounter = 0;
     let cycleData = [];
+
+     // 2. Initialize Firebase
+ 
+const firebaseConfig = {
+  apiKey: "AIzaSyDN1InuxhUFEfuzDsss2pP3sWCFpQhVM2Y",
+  authDomain: "rebmunbackward.firebaseapp.com",
+  projectId: "rebmunbackward",
+  storageBucket: "rebmunbackward.appspot.com",
+  messagingSenderId: "932660000198",
+  appId: "1:932660000198:web:e151c63fb5fcb4e3cf2ec7",
+  measurementId: "G-HEYT95HEWZ"
+};
+
+
+firebase.initializeApp(firebaseConfig);  // This line initializes Firebase
+var db = firebase.firestore();
+
+    // 3. Firebase Functions
+
+    function sendDataToFirebase(email, substance, score, bestDigitSpan) {
+      db.collection("games").add({
+          email: email,
+          substance: substance,
+          score: score,
+          bestDigitSpan: bestDigitSpan,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+      })
+      .catch((error) => {
+          console.error("Error adding document: ", error);
+      });
+    }
 
     async function startGame() {
       // Reading the email and substance influence
@@ -202,7 +239,18 @@ function endGame() {
     summary += `Original Order: ${cycle.originalOrder}\n`;
   });
   
+  // Add bestScore and bestDigitSpan to the summary
+  summary += `Best Score: ${Math.floor(bestScore)}\n`;
+  summary += `Best Digit Span: ${bestDigitSpan}\n`;
+
   alert(summary);
+
+  
+// Call sendDataToFirebase
+let substance = localStorage.getItem("substance");
+sendDataToFirebase(email, substance, Math.floor(score), bestDigitSpan);
+     
+
     // Reset game variables
 
   level = 5;
