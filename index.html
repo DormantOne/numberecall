@@ -197,6 +197,29 @@ function endGame() {
   });
   
   alert(summary);
+    // Reset game variables
+  level = 5;
+  score = 0;
+  originalNumber = "";
+  startTime = null;
+  totalTries = 0;
+  cycleCounter = 0;
+  cycleData = [];
+
+  // Update UI elements to reflect the reset
+  document.getElementById("level").innerText = level;
+  document.getElementById("score").innerText = score;
+  document.getElementById("bestScore").innerText = bestScore;
+
+  // Clear any dynamically generated elements
+  document.getElementById("userInputContainer").innerHTML = "";
+  
+  // Show start button and hide submit button
+  document.getElementById("startButton").style.display = "block";
+  document.getElementById("submitButton").style.display = "none";
+  
+  // Optionally, show a message to indicate the game has been reset
+  alert("The game has been reset. Click 'Start' to play again.");
 }
 
   </script>
