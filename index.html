@@ -198,13 +198,23 @@ function endGame() {
   
   alert(summary);
     // Reset game variables
+
   level = 5;
   score = 0;
+  bestScore = 0;  // Resetting the bestScore
   originalNumber = "";
   startTime = null;
   totalTries = 0;
   cycleCounter = 0;
   cycleData = [];
+
+    // Clear form fields
+  document.getElementById("emailInput").value = "";
+  document.querySelectorAll('input[name="substance"]').forEach((el) => el.checked = false);
+
+  // Remove items from localStorage
+  localStorage.removeItem("email");
+  localStorage.removeItem("substance");
 
   // Update UI elements to reflect the reset
   document.getElementById("level").innerText = level;
