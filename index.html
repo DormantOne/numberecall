@@ -40,11 +40,13 @@
   <p>Level: <span id="level">5</span></p>
   <p>Score: <span id="score">0</span></p>
   <p>Best Score: <span id="bestScore">0</span></p>
-  
+  <p>Best Digit Span: <span id="bestDigitSpan">0</span></p>  <!-- Add this line -->
+
   <script>
     let level = 5;
     let score = 0;
     let bestScore = 0;
+    let bestDigitSpan = 0;  // Add this line
     let originalNumber = "";
     let startTime = null;
     let totalTries = 0;
@@ -141,6 +143,9 @@
 
   if (userNumber === reversedOriginalNumber) {
     level++;
+     if (level - 1 > bestDigitSpan) {
+      bestDigitSpan = level - 1;  // Update bestDigitSpan
+    }
   } else if (level > 2) {
     level--;
   }
@@ -168,7 +173,8 @@
   document.getElementById("userInputContainer").innerHTML = "";
   document.getElementById("submitButton").style.display = "none";
   document.getElementById("startButton").style.display = "block";
-  
+  document.getElementById("bestDigitSpan").innerText = bestDigitSpan;  // Add this line to update the displayed value
+
   if (cycleCounter >= 4) {
     endGame();
   } else {
