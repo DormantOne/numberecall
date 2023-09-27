@@ -208,6 +208,7 @@ function endGame() {
   level = 5;
   score = 0;
   bestScore = 0;  // Resetting the bestScore
+  bestDigitSpan = 0;  // Resetting the bestDigitSpan
   originalNumber = "";
   startTime = null;
   totalTries = 0;
@@ -226,6 +227,7 @@ function endGame() {
   document.getElementById("level").innerText = level;
   document.getElementById("score").innerText = score;
   document.getElementById("bestScore").innerText = bestScore;
+  document.getElementById("bestDigitSpan").innerText = bestDigitSpan;  // Add this line to update the displayed value
 
   // Clear any dynamically generated elements
   document.getElementById("userInputContainer").innerHTML = "";
