@@ -186,11 +186,13 @@ var db = firebase.firestore();
   // Make sure time is at least 1 second
   elapsedTime = Math.max(elapsedTime / 1000, 1);
 
-  // Calculate the new score
-  score = ((lengthOfLargestChunk - removedDigits) * 100) / (elapsedTime / originalNumber.length);
 
-  // Make sure score is not negative
-  score = Math.max(score, 0);
+ // Calculate the new score
+let score = Math.pow((lengthOfLargestChunk - removedDigits), 1.6) / (elapsedTime / originalNumber.length);
+
+// Make sure score is not negative
+score = Math.max(score, 0);
+
 
   if (score > bestScore) {
     bestScore = score;
