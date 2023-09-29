@@ -188,8 +188,8 @@ var db = firebase.firestore();
 
 
  // Calculate the new score
-const base = Math.max(lengthOfLargestChunk - removedDigits, 0);
-score = Math.pow(base, 1.7) / (elapsedTime / originalNumber.length);
+const base = Math.max(lengthOfLargestChunk - removedDigits, 0.1);
+score = Math.pow(base, 2.5) / (elapsedTime / originalNumber.length);
 
 
 // Make sure score is not negative
