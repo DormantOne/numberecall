@@ -189,7 +189,7 @@ var db = firebase.firestore();
 
  // Calculate the new score
 const base = Math.max(lengthOfLargestChunk - removedDigits, 0.1);
-score = Math.pow(base, 2.5) / (elapsedTime / originalNumber.length);
+score = Math.pow(base, 2.7) / (elapsedTime / originalNumber.length);
 
 
 // Make sure score is not negative
@@ -278,7 +278,8 @@ function endGame() {
   
 // Call sendDataToFirebase
 let substance = localStorage.getItem("substance");
-sendDataToFirebase(email, substance, Math.floor(score), bestDigitSpan);
+sendDataToFirebase(email, substance, Math.floor(bestScore), bestDigitSpan);
+
      
 
     // Reset game variables
