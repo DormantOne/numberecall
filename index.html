@@ -178,6 +178,24 @@ var db = firebase.firestore();
   
   cycleData.push(cycleInfo);
 
+   // Calculate the length of the largest chunk and removed digits
+  const largestChunkInfo = findLargestChunk(reversedOriginalNumber, userNumber);
+  const lengthOfLargestChunk = largestChunkInfo.length;
+  const removedDigits = reversedOriginalNumber.length - lengthOfLargestChunk;
+
+  // Make sure time is at least 1 second
+  elapsedTime = Math.max(elapsedTime / 1000, 1);
+
+  // Calculate the new score
+  score = ((lengthOfLargestChunk - removedDigits) * 100) / (elapsedTime / originalNumber.length);
+
+  // Make sure score is not negative
+  score = Math.max(score, 0);
+
+  if (score > bestScore) {
+    bestScore = score;
+  }
+
   if (userNumber === reversedOriginalNumber) {
     level++;
      if (level - 1 > bestDigitSpan) {
@@ -187,17 +205,7 @@ var db = firebase.firestore();
     level--;
   }
 
-  // Use reversedOriginalNumber for grading
-  let partialScore = 0;
-  for (let i = 0; i < reversedOriginalNumber.length; i++) {
-    if (userNumber[i] === reversedOriginalNumber[i]) {
-      partialScore += 5;
-    } else if (reversedOriginalNumber.includes(userNumber[i])) {
-      partialScore += 2;
-    }
-  }
-
-  score += (partialScore * level) / totalTries - Math.floor(elapsedTime / 1000);
+ 
 
   if (score > bestScore) {
     bestScore = score;
@@ -217,6 +225,24 @@ var db = firebase.firestore();
   } else {
     startGame();
   }
+}
+
+
+function findLargestChunk(correctAnswer, userAnswer) {
+  let largestChunk = "";
+  let chunkStart = 0;
+
+  for (let i = 0; i < correctAnswer.length; i++) {
+    for (let j = i + 1; j <= correctAnswer.length; j++) {
+      const chunk = correctAnswer.slice(i, j);
+      if (userAnswer.includes(chunk) && chunk.length > largestChunk.length) {
+        largestChunk = chunk;
+        chunkStart = i;
+      }
+    }
+  }
+
+  return { length: largestChunk.length, start: chunkStart };
 }
 
 function endGame() {
