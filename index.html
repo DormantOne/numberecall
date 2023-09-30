@@ -44,6 +44,7 @@
   <p>Score: <span id="score">0</span></p>
   <p>Best Score: <span id="bestScore">0</span></p>
   <p>Best Digit Span: <span id="bestDigitSpan">0</span></p>  <!-- Add this line -->
+  <button id="analyticsButton">Go to Analytics</button>
 
   <script>
     let level = 5;
@@ -318,6 +319,13 @@ sendDataToFirebase(email, substance, bestScore, bestDigitSpan);
   // Optionally, show a message to indicate the game has been reset
   alert("The game has been reset. Click 'Start' to play again.");
 }
+
+ document.addEventListener("DOMContentLoaded", function() {
+    const analyticsButton = document.getElementById("analyticsButton");
+    analyticsButton.addEventListener("click", function() {
+      window.location.href = "https://dormantone.github.io/analyze-rebmun/";
+    });
+  });
 
   </script>
   
